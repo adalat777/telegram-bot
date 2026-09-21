@@ -20,7 +20,8 @@ dp = Dispatcher()
 processed_txs = set()
 
 async def fetch_latest_sales():
-    url = f"https://tonapi.io/v2/nfts/collections/{COLLECTION_ADDRESS}/history?limit=20"
+    url = f"https://toncenter.com/api/v2/getNftHistory?address={COLLECTION_ADDRESS}&limit=20"
+
     headers = {"Authorization": f"Bearer {SATELLITE_API_KEY}"}
     
     async with aiohttp.ClientSession() as session:
