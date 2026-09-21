@@ -6,7 +6,7 @@ import aiohttp
 
 # --- КОНФИГУРАЦИЯ ---
 BOT_TOKEN = "8560883661:AAGNtNKl-aDF13-JKogGpEVAvwcwHaB5TeU" # Ваш токен бота
-CHAT_ID = "1004384466442" # Ваш Chat ID группы/канала
+CHAT_ID = "-1004384466442" # Ваш Chat ID группы/канала
 SATELLITE_API_KEY = "304b39326bb7bc7ea0b0908246a986a21bf40dcd8d82cf913bd3c7c068692d52" # Ваш Satellite API ключ
 
 # Адрес коллекции Gifts/Usernames
