@@ -5,7 +5,7 @@ from aiogram.enums import ParseMode
 import aiohttp
 
 # --- КОНФИГУРАЦИЯ ---
-BOT_TOKEN = "8560883661:AAEDXESyui5_eM8MRJuJpAWFarB_bUfkeeI"
+BOT_TOKEN = "8560883661:AAFQp0dMkmDs-xKq6iRwhP1vwSABYgxGrMI"
 CHAT_ID = "-1004384466442"  # Указан формат с -100 для каналов/групп
 SATELLITE_API_KEY = "304b39326bb7bc7ea0b0908246a986a21bf40dcd8d82cf913bd3c7c068692d52"
 
@@ -20,7 +20,7 @@ dp = Dispatcher()
 processed_txs = set()
 
 async def fetch_latest_sales():
-    # Используем публичный v2 эндпоинт TonAPI для событий коллекции
+    # Исправленный URL события истории коллекции для TonAPI
     url = f"https://tonapi.io/v2/nfts/collections/{COLLECTION_ADDRESS}/history?limit=20"
     headers = {"Authorization": f"Bearer {SATELLITE_API_KEY}"}
     
@@ -30,12 +30,22 @@ async def fetch_latest_sales():
                 if response.status == 200:
                     data = await response.json()
                     return data.get("events", [])
+                elif response.status == 404:
+                    # Резервный запрос через публичный методы, если коллекция требует прямого индекса
+                    url_alt = f"https://tonapi.io/v2/accounts/{COLLECTION_ADDRESS}/events?limit=20"
+                    async with session.get(url_alt, headers=headers, timeout=10) as resp_alt:
+                        if resp_alt.status == 200:
+                            data_alt = await resp_alt.json()
+                            return data_alt.get("events", [])
+                    logging.error(f"Ошибка API: 404 (Проверьте COLLECTION_ADDRESS)")
+                    return []
                 else:
                     logging.error(f"Ошибка API: {response.status}")
                     return []
         except Exception as e:
             logging.error(f"Ошибка подключения к сети: {e}")
             return []
+
 
 async def check_sales():
     while True:
